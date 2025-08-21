@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Paradoxes Explorer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #60a5fa, #a855f7);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #cbd5e1;
+            font-size: 1.2rem;
+        }
+
+        .paradox-card {
+            background: #374151;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .paradox-card:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        .paradox-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            color: #60a5fa;
+            flex-shrink: 0;
+        }
+
+        .paradox-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .paradox-subtitle {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .chevron {
+            width: 20px;
+            height: 20px;
+            color: #9ca3af;
+            transition: transform 0.3s ease;
+            margin-left: auto;
+        }
+
+        .chevron.rotated {
+            transform: rotate(90deg);
+        }
+
+        .paradox-content {
+            display: none;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #6b7280;
+        }
+
+        .paradox-content.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .description {
+            color: #d1d5db;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .details {
+            margin-bottom: 25px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .bullet {
+            width: 8px;
+            height: 8px;
+            background: #60a5fa;
+            border-radius: 50%;
+            margin-top: 8px;
+            flex-shrink: 0;
+        }
+
+        .detail-text {
+            color: #d1d5db;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .demo-button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .demo-button:hover {
+            background: #1d4ed8;
+        }
+
+        .demo {
+            display: none;
+            background: #111827;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .demo.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .black-hole {
+            width: 60px;
+            height: 60px;
+            background: black;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            position: relative;
+            border: 2px solid #f97316;
+        }
+
+        .hawking-radiation {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #fbbf24;
+            border-radius: 50%;
+            animation: radiation 2s infinite;
+        }
+
+        .radiation-1 {
+            top: -5px;
+            right: -5px;
+        }
+
+        .radiation-2 {
+            bottom: -5px;
+            left: -5px;
+            animation-delay: 1s;
+        }
+
+        @keyframes radiation {
+
+            0%,
+            100% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+        }
+
+        .firewall {
+            width: 80px;
+            height: 80px;
+            background: black;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            position: relative;
+            border: 4px solid #ef4444;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                border-color: #ef4444;
+            }
+
+            50% {
+                border-color: #f97316;
+            }
+        }
+
+        .twin-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .twin {
+            text-align: center;
+        }
+
+        .twin-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .earth-twin {
+            background: #3b82f6;
+        }
+
+        .space-twin {
+            background: #ef4444;
+        }
+
+        .twin-label {
+            font-size: 0.8rem;
+            margin-bottom: 3px;
+        }
+
+        .twin-age {
+            color: #10b981;
+            font-size: 0.8rem;
+        }
+
+        .olbers-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .sky-comparison {
+            text-align: center;
+        }
+
+        .sky-box {
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            border: 2px solid;
+        }
+
+        .dark-sky {
+            background: black;
+            border-color: #6b7280;
+        }
+
+        .bright-sky {
+            background: #fef3c7;
+            border-color: #fbbf24;
+            color: #92400e;
+            font-weight: bold;
+        }
+
+        .star {
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            margin: 2px;
+        }
+
+        .galaxy {
+            position: relative;
+            width: 120px;
+            height: 60px;
+            margin: 0 auto 15px;
+        }
+
+        .galaxy-star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        .star-1 {
+            background: #fbbf24;
+            top: 10px;
+            left: 10px;
+        }
+
+        .star-2 {
+            background: #60a5fa;
+            top: 25px;
+            left: 30px;
+            animation-delay: 0.5s;
+        }
+
+        .star-3 {
+            background: #ef4444;
+            top: 5px;
+            left: 60px;
+            animation-delay: 1s;
+        }
+
+        .star-4 {
+            background: #10b981;
+            top: 35px;
+            left: 80px;
+            animation-delay: 1.5s;
+        }
+
+        .star-5 {
+            background: white;
+            top: 20px;
+            right: 10px;
+            animation-delay: 2s;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        .big-picture {
+            background: linear-gradient(45deg, #7c3aed, #2563eb);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 40px;
+        }
+
+        .big-picture h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .big-picture p {
+            color: #e5e7eb;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Space Paradoxes Explorer</h1>
+            <p class="subtitle">Journey through the mind-bending mysteries of the universe</p>
+        </div>
+
+        <div class="paradox-card" onclick="toggleParadox('information')">
+            <div class="paradox-header">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+                <div>
+                    <div class="paradox-title">Black Hole Information Paradox</div>
+                    <div class="paradox-subtitle">Where does information go when it falls into a black hole?</div>
+                </div>
+                <svg class="chevron" id="chevron-information" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+            <div class="paradox-content" id="content-information">
+                <div class="description">
+                    According to quantum mechanics, information cannot be destroyed - but black holes seem to do exactly
+                    that when they evaporate via Hawking radiation.
+                </div>
+                <div class="details">
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">Quantum mechanics says information is conserved - it can be scrambled
+                            but never destroyed</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">General relativity says anything falling past the event horizon is gone
+                            forever</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">Hawking radiation appears random and carries no information about what
+                            fell in</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">This creates a fundamental conflict between our two best theories of
+                            physics</div>
+                    </div>
+                </div>
+                <button class="demo-button" onclick="toggleDemo('hawking')">Show Visualization</button>
+                <div class="demo" id="demo-hawking">
+                    <div class="black-hole">
+                        <div class="hawking-radiation radiation-1"></div>
+                        <div class="hawking-radiation radiation-2"></div>
+                    </div>
+                    <p style="margin-bottom: 10px;">Black hole evaporating via Hawking radiation</p>
+                    <p style="font-size: 0.9rem; color: #d1d5db;">💫 Information falls in → gets scrambled → but quantum
+                        mechanics says it must come back out</p>
+                    <p style="font-size: 0.9rem; color: #d1d5db; margin-top: 8px;">🔥 But Hawking radiation appears
+                        random - where did the information go?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="paradox-card" onclick="toggleParadox('firewall')">
+            <div class="paradox-header">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <div>
+                    <div class="paradox-title">Black Hole Firewall Paradox</div>
+                    <div class="paradox-subtitle">Should you burn up at the event horizon or fall through peacefully?
+                    </div>
+                </div>
+                <svg class="chevron" id="chevron-firewall" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+            <div class="paradox-content" id="content-firewall">
+                <div class="description">
+                    Einstein says you fall through the event horizon without noticing, but quantum mechanics suggests
+                    you hit a "firewall" of deadly radiation.
+                </div>
+                <div class="details">
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">Einstein's equivalence principle: falling feels the same as floating in
+                            empty space</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">You should pass through the event horizon without feeling anything
+                            special</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">But quantum entanglement suggests the horizon becomes a wall of fire
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">Both can't be true - something fundamental must give way</div>
+                    </div>
+                </div>
+                <button class="demo-button" onclick="toggleDemo('firewall')">Show Visualization</button>
+                <div class="demo" id="demo-firewall">
+                    <div class="firewall"></div>
+                    <p>Event horizon: peaceful crossing or deadly firewall?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="paradox-card" onclick="toggleParadox('twin')">
+            <div class="paradox-header">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                    <div class="paradox-title">Gravitational Twin Paradox</div>
+                    <div class="paradox-subtitle">Who ages faster near a black hole?</div>
+                </div>
+                <svg class="chevron" id="chevron-twin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+            <div class="paradox-content" id="content-twin">
+                <div class="description">
+                    Time runs slower in stronger gravity. Send one twin near a black hole while the other stays far away
+                    - who ages more when they reunite?
+                </div>
+                <div class="details">
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">Time dilation: clocks run slower in stronger gravitational fields</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">Near a black hole, time nearly stops from an outside perspective</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">The twin near the black hole ages much more slowly</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">From their perspective, they see the distant twin aging rapidly</div>
+                    </div>
+                </div>
+                <button class="demo-button" onclick="toggleDemo('twins')">Show Visualization</button>
+                <div class="demo" id="demo-twins">
+                    <div class="twin-container">
+                        <div class="twin">
+                            <div class="twin-avatar earth-twin">👨</div>
+                            <div class="twin-label">Earth twin</div>
+                            <div class="twin-age">Ages 50 years</div>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <div class="black-hole" style="width: 30px; height: 30px; border: 1px solid #fbbf24;"></div>
+                        </div>
+                        <div class="twin">
+                            <div class="twin-avatar space-twin">👨</div>
+                            <div class="twin-label">Black hole twin</div>
+                            <div class="twin-age">Ages 5 years</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="paradox-card" onclick="toggleParadox('olbers')">
+            <div class="paradox-header">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                </svg>
+                <div>
+                    <div class="paradox-title">Olbers' Paradox</div>
+                    <div class="paradox-subtitle">Why is the night sky dark?</div>
+                </div>
+                <svg class="chevron" id="chevron-olbers" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+            <div class="paradox-content" id="content-olbers">
+                <div class="description">
+                    If the universe is infinite with infinite stars, every direction should hit a star. The entire night
+                    sky should be as bright as the Sun's surface.
+                </div>
+                <div class="details">
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">In an infinite, static universe with infinite stars, every line of
+                            sight hits a star</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">The night sky should be blazingly bright everywhere</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">But it's dark - so our assumptions must be wrong</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">Solution: the universe has a finite age, so light from distant stars
+                            hasn't reached us yet</div>
+                    </div>
+                </div>
+                <button class="demo-button" onclick="toggleDemo('olbers')">Show Visualization</button>
+                <div class="demo" id="demo-olbers">
+                    <div class="olbers-grid">
+                        <div class="sky-comparison">
+                            <div class="sky-box dark-sky">
+                                <div class="star"></div>
+                                <div class="star" style="margin-left: 8px;"></div>
+                            </div>
+                            <div style="font-size: 0.8rem;">Reality: Dark night sky</div>
+                        </div>
+                        <div class="sky-comparison">
+                            <div class="sky-box bright-sky">BRIGHT</div>
+                            <div style="font-size: 0.8rem;">Theory: Should be blazing</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="paradox-card" onclick="toggleParadox('fermi')">
+            <div class="paradox-header">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <div>
+                    <div class="paradox-title">Fermi Paradox</div>
+                    <div class="paradox-subtitle">Where is everybody?</div>
+                </div>
+                <svg class="chevron" id="chevron-fermi" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+            <div class="paradox-content" id="content-fermi">
+                <div class="description">
+                    The galaxy should be teeming with alien civilizations by now. With billions of stars and billions of
+                    years, where are all the aliens?
+                </div>
+                <div class="details">
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">The Milky Way has ~400 billion stars, many with potentially habitable
+                            planets</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">Even slow interstellar travel could colonize the galaxy in ~10 million
+                            years</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">The galaxy is ~13 billion years old - plenty of time for civilizations
+                            to spread</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="bullet"></div>
+                        <div class="detail-text">Yet we see no signs of alien technology or civilizations anywhere</div>
+                    </div>
+                </div>
+                <button class="demo-button" onclick="toggleDemo('fermi')">Show Visualization</button>
+                <div class="demo" id="demo-fermi">
+                    <div class="galaxy">
+                        <div class="galaxy-star star-1"></div>
+                        <div class="galaxy-star star-2"></div>
+                        <div class="galaxy-star star-3"></div>
+                        <div class="galaxy-star star-4"></div>
+                        <div class="galaxy-star star-5"></div>
+                    </div>
+                    <p style="margin-bottom: 8px;">400 billion stars in our galaxy alone...</p>
+                    <p style="font-size: 0.9rem; color: #9ca3af;">Where are the aliens? 🛸</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="big-picture">
+            <h3>🌌 The Big Picture</h3>
+            <p>
+                These paradoxes aren't just academic puzzles - they're pointing us toward the limits of our current
+                understanding.
+                Each one suggests that our most fundamental theories about space, time, and information might be
+                incomplete or wrong.
+                The solutions often require revolutionary new physics that we haven't discovered yet.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let activeParadox = null;
+        let activeDemo = null;
+
+        function toggleParadox(paradoxId) {
+            const content = document.getElementById('content-' + paradoxId);
+            const chevron = document.getElementById('chevron-' + paradoxId);
+
+            if (activeParadox === paradoxId) {
+                // Close current paradox
+                content.classList.remove('active');
+                chevron.classList.remove('rotated');
+                activeParadox = null;
+                // Also close any active demo
+                if (activeDemo) {
+                    document.getElementById('demo-' + activeDemo).classList.remove('active');
+                    activeDemo = null;
+                }
+            } else {
+                // Close previously active paradox
+                if (activeParadox) {
+                    document.getElementById('content-' + activeParadox).classList.remove('active');
+                    document.getElementById('chevron-' + activeParadox).classList.remove('rotated');
+                    // Close any active demo
+                    if (activeDemo) {
+                        document.getElementById('demo-' + activeDemo).classList.remove('active');
+                        activeDemo = null;
+                    }
+                }
+
+                // Open new paradox
+                content.classList.add('active');
+                chevron.classList.add('rotated');
+                activeParadox = paradoxId;
+            }
+        }
+
+        function toggleDemo(demoId) {
+            event.stopPropagation(); // Prevent paradox from closing
+
+            const demo = document.getElementById('demo-' + demoId);
+            const button = event.target;
+
+            if (activeDemo === demoId) {
+                demo.classList.remove('active');
+                button.textContent = 'Show Visualization';
+                activeDemo = null;
+            } else {
+                // Close any other active demo
+                if (activeDemo) {
+                    document.getElementById('demo-' + activeDemo).classList.remove('active');
+                    // Find and update the button text for the previously active demo
+                    const prevButtons = document.querySelectorAll('.demo-button');
+                    prevButtons.forEach(btn => {
+                        if (btn.textContent === 'Hide Visualization') {
+                            btn.textContent = 'Show Visualization';
+                        }
+                    });
+                }
+
+                demo.classList.add('active');
+                button.textContent = 'Hide Visualization';
+                activeDemo = demoId;
+            }
+        }
+    </script>
+</body>
+
+</html>
